@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
@@ -30,7 +28,19 @@ public class UserServiceImpl implements UserService{
                 .build();
 
         userRepository.save(newUser);
-
         return newUser;
+    }
+
+    @Override
+    public User getUserInfo(Long id) {
+        User selectUser = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException("user_not_found", HttpStatus.NOT_FOUND));
+
+        return User.builder()
+                .id(selectUser.getId())
+                .email(selectUser.getEmail())
+                .nickname(selectUser.getNickname())
+                .profileImagePath(selectUser.getProfileImagePath())
+                .build();
     }
 }

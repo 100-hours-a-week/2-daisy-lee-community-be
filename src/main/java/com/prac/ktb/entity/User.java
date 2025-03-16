@@ -9,7 +9,6 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "users")
 public class User {
 
@@ -33,7 +32,8 @@ public class User {
     private Date droppedAt;
 
     @Builder
-    public User(String email, String password, String nickname, String profileImagePath, Date droppedAt) {
+    public User(Long id, String email, String password, String nickname, String profileImagePath, Date droppedAt) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
