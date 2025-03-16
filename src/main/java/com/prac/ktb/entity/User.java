@@ -1,10 +1,7 @@
 package com.prac.ktb.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -14,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-public class UserEntity {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,14 +27,18 @@ public class UserEntity {
     private String nickname;
 
     @Column
-    private String profileImage;
+    private String profileImagePath;
 
     @Column
     private Date droppedAt;
 
-    public UserEntity(Long id, String email, String nickname) {
-        this.id = id;
+    @Builder
+    public User(String email, String password, String nickname, String profileImagePath, Date droppedAt) {
         this.email = email;
+        this.password = password;
         this.nickname = nickname;
+        this.profileImagePath = profileImagePath;
+        this.droppedAt = droppedAt;
     }
+
 }

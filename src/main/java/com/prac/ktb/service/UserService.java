@@ -1,7 +1,8 @@
 package com.prac.ktb.service;
 
-import org.springframework.stereotype.Service;
+import com.prac.ktb.dto.UserRequestDto;
+import com.prac.ktb.entity.User;
 
-@Service
-public class UserService {
+public interface UserService {
+    User createUser(UserRequestDto userRequestDto);
 }
