@@ -14,6 +14,6 @@ public class UserRequestDto {
     private String password;
     private String email;
     private String nickname;
-    private String profileImage;
+    private String profileImagePath;
     private Date droppedAt;
 }
