@@ -1,6 +1,6 @@
 package com.prac.ktb.controller;
 
-import com.prac.ktb.auth.JwtService;
+import com.prac.ktb.auth.JwtProvider;
 import com.prac.ktb.dto.ApiResponseDto;
 import com.prac.ktb.dto.UserRequestDto;
 import com.prac.ktb.entity.User;
@@ -18,11 +18,11 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-    private final JwtService jwtService;
+    private final JwtProvider jwtProvider;
 
-    public UserController(UserService userService, JwtService jwtService) {
+    public UserController(UserService userService, JwtProvider jwtProvider) {
         this.userService = userService;
-        this.jwtService = jwtService;
+        this.jwtProvider = jwtProvider;
     }
 
     // 회원가입
@@ -45,7 +45,7 @@ public class UserController {
         }
 
         String jwt = accessToken.substring(7);
-        Long tokenUserId = jwtService.validateAndExtractUserId(jwt);
+        Long tokenUserId = jwtProvider.validateAndExtractUserId(jwt);
 
         if(!tokenUserId.equals(userId)) {
             throw new CustomException("user_forbidden", HttpStatus.FORBIDDEN);
