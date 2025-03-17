@@ -1,6 +1,6 @@
-package com.prac.ktb.exception;
+package com.prac.ktb.common.exception;
 
-import com.prac.ktb.dto.ApiResponseDto;
+import com.prac.ktb.common.dto.ApiResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

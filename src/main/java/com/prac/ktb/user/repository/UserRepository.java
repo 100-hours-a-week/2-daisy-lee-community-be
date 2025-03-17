@@ -1,10 +1,9 @@
-package com.prac.ktb.repository;
+package com.prac.ktb.user.repository;
 
-import com.prac.ktb.entity.User;
+import com.prac.ktb.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

@@ -1,4 +1,4 @@
-package com.prac.ktb.auth;
+package com.prac.ktb.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

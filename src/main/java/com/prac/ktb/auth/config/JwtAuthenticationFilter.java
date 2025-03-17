@@ -1,4 +1,4 @@
-package com.prac.ktb.auth;
+package com.prac.ktb.auth.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

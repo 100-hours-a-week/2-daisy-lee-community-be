@@ -1,11 +1,11 @@
-package com.prac.ktb.controller;
+package com.prac.ktb.user.controller;
 
-import com.prac.ktb.auth.JwtProvider;
-import com.prac.ktb.dto.ApiResponseDto;
-import com.prac.ktb.dto.UserRequestDto;
-import com.prac.ktb.entity.User;
-import com.prac.ktb.exception.CustomException;
-import com.prac.ktb.service.UserService;
+import com.prac.ktb.auth.config.JwtProvider;
+import com.prac.ktb.common.dto.ApiResponseDto;
+import com.prac.ktb.user.dto.UserRequestDto;
+import com.prac.ktb.user.entity.User;
+import com.prac.ktb.common.exception.CustomException;
+import com.prac.ktb.user.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.prac.ktb.entity;
+package com.prac.ktb.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

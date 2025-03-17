@@ -1,9 +1,9 @@
-package com.prac.ktb.service;
+package com.prac.ktb.user.service;
 
-import com.prac.ktb.dto.UserRequestDto;
-import com.prac.ktb.entity.User;
-import com.prac.ktb.exception.CustomException;
-import com.prac.ktb.repository.UserRepository;
+import com.prac.ktb.user.dto.UserRequestDto;
+import com.prac.ktb.user.entity.User;
+import com.prac.ktb.common.exception.CustomException;
+import com.prac.ktb.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
