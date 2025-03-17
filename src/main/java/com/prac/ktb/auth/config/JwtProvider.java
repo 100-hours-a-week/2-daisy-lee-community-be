@@ -12,10 +12,8 @@ import java.util.Date;
 
 @Component
 public class JwtProvider {
-    @Value("${jwt.secret}")
-    private Key SECRET_KEY;
 
-    @Value("${jwt.expiration}")
+    private final Key SECRET_KEY;
     private Long EXPIRATION_TIME;
 
     public JwtProvider(@Value("${jwt.secret}") String secretKey,

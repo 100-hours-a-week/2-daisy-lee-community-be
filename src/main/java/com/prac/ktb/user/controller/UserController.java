@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RestController("/users")
+@RestController
+@RequestMapping("/users")
 @Transactional
 public class UserController {
 
