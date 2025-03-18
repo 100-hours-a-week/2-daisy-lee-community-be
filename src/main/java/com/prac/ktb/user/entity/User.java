@@ -31,14 +31,4 @@ public class User {
     @Column
     private Date droppedAt;
 
-    @Builder
-    public User(Long id, String email, String password, String nickname, String profileImagePath, Date droppedAt) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-        this.profileImagePath = profileImagePath;
-        this.droppedAt = droppedAt;
-    }
-
 }
