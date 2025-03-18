@@ -31,7 +31,7 @@ public class UserController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity<ApiResponseDto<Map<String, Object>>> createUser(@RequestBody UserRequestDto userReqDto) {
+    public ResponseEntity<ApiResponseDto<UserResponseDto>> createUser(@RequestBody UserRequestDto userReqDto) {
         UserResponseDto newUserResDto = userService.createUser(userReqDto);
 
         Map<String, Object> responseData = Map.of("userId", newUserResDto.getId());
@@ -47,7 +47,7 @@ public class UserController {
      * @return ResponseEntity
      */
     @GetMapping("/{userId}")
-    public ResponseEntity<ApiResponseDto<Map<String, Object>>> getUserInfo(@PathVariable Long userId,
+    public ResponseEntity<ApiResponseDto<UserResponseDto>> getUserInfo(@PathVariable Long userId,
                                                                            @AuthenticationPrincipal UserDetails userDetails) {
 
         UserResponseDto selectUserDto = userService.getUserInfoById(userId);
@@ -66,7 +66,7 @@ public class UserController {
      * @return ResponseEntity
      */
     @PatchMapping("/{userId}")
-    public ResponseEntity<ApiResponseDto<Map<String, Object>>> updateUserInfo(@PathVariable Long userId,
+    public ResponseEntity<ApiResponseDto<UserResponseDto>> updateUserInfo(@PathVariable Long userId,
                                                                               @RequestBody UserRequestDto userReqDto,
                                                                               @AuthenticationPrincipal UserDetails userDetails) {
         UserResponseDto userResDto = userService.updateUser(userId, userDetails, userReqDto);
@@ -83,7 +83,7 @@ public class UserController {
      * @return ResponseEntity
      */
     @PatchMapping("/{userId}/password")
-    public ResponseEntity<ApiResponseDto<Map<String, Object>>> updateUserPassword(@PathVariable Long userId,
+    public ResponseEntity<ApiResponseDto<UserResponseDto>> updateUserPassword(@PathVariable Long userId,
                                                                                   @RequestBody UserRequestDto userReqDto,
                                                                                   @AuthenticationPrincipal UserDetails userDetails) {
         userService.updateUserPassword(userId, userDetails, userReqDto);
@@ -99,13 +99,11 @@ public class UserController {
      * @return ResponseEntity
      */
     @DeleteMapping("/{userId}")
-    public ResponseEntity<ApiResponseDto<Map<String, Object>>> deleteUser(@PathVariable Long userId,
+    public ResponseEntity<ApiResponseDto<UserResponseDto>> deleteUser(@PathVariable Long userId,
                                                                           @AuthenticationPrincipal UserDetails userDetails) {
         userService.deleteUser(userId, userDetails);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponseDto<>("user_delete_success", null));
 
     }
-
-
 }
