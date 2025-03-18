@@ -1,6 +1,7 @@
 package com.prac.ktb.auth.service;
 
 import com.prac.ktb.auth.config.JwtProvider;
+import com.prac.ktb.auth.dto.LoginRequestDto;
 import com.prac.ktb.auth.dto.LoginResponseDto;
 import com.prac.ktb.common.exception.CustomException;
 import com.prac.ktb.user.entity.User;
@@ -21,15 +22,15 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public LoginResponseDto login(String email, String password) {
-        User loginUser = userRepository.findByEmail(email)
+    public LoginResponseDto login(LoginRequestDto loginRequestDto) {
+        User loginUser = userRepository.findByEmail(loginRequestDto.getEmail())
                 .orElseThrow(() -> new CustomException("user_login_fail", HttpStatus.NOT_FOUND));
 
-        if(!passwordEncoder.matches(password, loginUser.getPassword())) {
+        if(!passwordEncoder.matches(loginRequestDto.getPassword(), loginUser.getPassword())) { // 입력한 password, DB에 저장된 암호화된 password
             throw new CustomException("user_login_fail", HttpStatus.UNAUTHORIZED);
         }
 
-        String jwt = jwtProvider.generateToken(loginUser.getId());
+        String jwt = jwtProvider.generateToken(loginUser.getEmail());
 
         return new LoginResponseDto(loginUser.getId(), jwt);
     }

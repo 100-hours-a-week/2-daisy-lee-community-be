@@ -24,9 +24,9 @@ public class JwtProvider {
     }
 
     // JWT 생성
-    public String generateToken(Long userId) {
+    public String generateToken(String email) {
         return Jwts.builder()
-                .setSubject(String.valueOf(userId))
+                .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
@@ -50,15 +50,19 @@ public class JwtProvider {
                 .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(token);
-
             return true;
-        } catch (JwtException | IllegalArgumentException ex) {
-            return false;
+        // ToDo. enum 활용하여 에러 처리
+        } catch (ExpiredJwtException e) {
+            throw new RuntimeException("expired_token");
+        } catch (JwtException e) {
+            throw new RuntimeException("changed_token");
+        } catch (IllegalArgumentException ex) {
+            throw new RuntimeException("IllegalArgumentException");
         }
     }
 
     // JWT 유효성 검증 및 userId 추출
-    public Long validateAndExtractUserId(String token) {
+    /*public Long validateAndExtractUserId(String token) {
         try{
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(SECRET_KEY)
@@ -68,9 +72,30 @@ public class JwtProvider {
 
             return Long.parseLong(claims.getSubject());
         } catch (ExpiredJwtException e) {
-            throw new RuntimeException("토큰이 만료되었습니다.");
+            throw new RuntimeException("expired_token");
         } catch (JwtException e) {
-            throw new RuntimeException("유효하지 않은 토큰입니다.");
+            throw new RuntimeException("changed_token");
+        } catch (IllegalArgumentException ex) {
+            throw new RuntimeException("IllegalArgumentException");
+        }
+    }*/
+
+    // JWT 유효성 검증 및 email 추출
+    public String validateAndExtractEmail(String token) {
+        try{
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return claims.getSubject();
+        } catch (ExpiredJwtException e) {
+            throw new RuntimeException("expired_token");
+        } catch (JwtException e) {
+            throw new RuntimeException("changed_token");
+        } catch (IllegalArgumentException ex) {
+            throw new RuntimeException("IllegalArgumentException");
         }
     }
 

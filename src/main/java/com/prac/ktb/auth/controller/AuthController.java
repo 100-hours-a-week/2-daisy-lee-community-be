@@ -1,5 +1,6 @@
 package com.prac.ktb.auth.controller;
 
+import com.prac.ktb.auth.dto.LoginRequestDto;
 import com.prac.ktb.auth.dto.LoginResponseDto;
 import com.prac.ktb.auth.service.AuthService;
 import com.prac.ktb.common.dto.ApiResponseDto;
@@ -22,8 +23,8 @@ public class AuthController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponseDto<LoginResponseDto>> login(@RequestBody String email, String password) {
-        LoginResponseDto loginResponseDto = authService.login(email, password);
+    public ResponseEntity<ApiResponseDto<LoginResponseDto>> login(@RequestBody LoginRequestDto loginRequestDto) {
+        LoginResponseDto loginResponseDto = authService.login(loginRequestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponseDto<>("user_login_success", loginResponseDto));

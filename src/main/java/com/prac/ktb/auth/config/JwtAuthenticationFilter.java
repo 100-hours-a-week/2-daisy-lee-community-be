@@ -30,14 +30,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwt = jwtProvider.resolveToken(request);
 
         if(jwt != null && jwtProvider.validateToken(jwt)) {
-            Long userId = jwtProvider.validateAndExtractUserId(jwt);
+            String email = jwtProvider.validateAndExtractEmail(jwt);
 
-            UserDetails userDetails = new User(String.valueOf(userId), "", Collections.emptyList()); // JWT으로 인증처리를 하기 때문에 password 부분은 공란
+            UserDetails userDetails = new User(String.valueOf(email), "", Collections.emptyList()); // JWT으로 인증처리를 하기 때문에 password 부분은 공란
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, jwt, userDetails.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-
         filterChain.doFilter(request, response);
     }
 
