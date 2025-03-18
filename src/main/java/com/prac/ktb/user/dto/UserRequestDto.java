@@ -1,4 +1,4 @@
-package com.prac.ktb.dto;
+package com.prac.ktb.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +14,6 @@ public class UserRequestDto {
     private String password;
     private String email;
     private String nickname;
-    private String profileImage;
+    private String profileImagePath;
     private Date droppedAt;
 }

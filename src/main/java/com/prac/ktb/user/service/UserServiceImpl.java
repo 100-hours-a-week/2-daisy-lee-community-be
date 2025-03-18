@@ -1,11 +1,12 @@
-package com.prac.ktb.service;
+package com.prac.ktb.user.service;
 
-import com.prac.ktb.dto.UserRequestDto;
-import com.prac.ktb.entity.User;
-import com.prac.ktb.exception.CustomException;
-import com.prac.ktb.repository.UserRepository;
+import com.prac.ktb.user.dto.UserRequestDto;
+import com.prac.ktb.user.entity.User;
+import com.prac.ktb.common.exception.CustomException;
+import com.prac.ktb.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User createUser(UserRequestDto userRequestDto) {
@@ -22,9 +24,9 @@ public class UserServiceImpl implements UserService{
 
         User newUser = User.builder()
                 .email(userRequestDto.getEmail())
-                .password(userRequestDto.getPassword())
+                .password(passwordEncoder.encode(userRequestDto.getPassword()))
                 .nickname(userRequestDto.getNickname())
-                .profileImagePath(userRequestDto.getProfileImage())
+                .profileImagePath(userRequestDto.getProfileImagePath())
                 .build();
 
         userRepository.save(newUser);
@@ -32,7 +34,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User getUserInfo(Long id) {
+    public User getUserInfoById(Long id) {
         User selectUser = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException("user_not_found", HttpStatus.NOT_FOUND));
 

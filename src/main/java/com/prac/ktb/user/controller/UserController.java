@@ -1,28 +1,31 @@
-package com.prac.ktb.controller;
+package com.prac.ktb.user.controller;
 
-import com.prac.ktb.auth.JwtService;
-import com.prac.ktb.dto.ApiResponseDto;
-import com.prac.ktb.dto.UserRequestDto;
-import com.prac.ktb.entity.User;
-import com.prac.ktb.exception.CustomException;
-import com.prac.ktb.service.UserService;
+import com.prac.ktb.auth.config.JwtProvider;
+import com.prac.ktb.common.dto.ApiResponseDto;
+import com.prac.ktb.user.dto.UserRequestDto;
+import com.prac.ktb.user.entity.User;
+import com.prac.ktb.common.exception.CustomException;
+import com.prac.ktb.user.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RestController("/users")
+@RestController
+@RequestMapping("/users")
 @Transactional
 public class UserController {
 
     private final UserService userService;
-    private final JwtService jwtService;
+    private final JwtProvider jwtProvider;
 
-    public UserController(UserService userService, JwtService jwtService) {
+    public UserController(UserService userService, JwtProvider jwtProvider) {
         this.userService = userService;
-        this.jwtService = jwtService;
+        this.jwtProvider = jwtProvider;
     }
 
     // 회원가입
@@ -39,19 +42,14 @@ public class UserController {
     // 사용자 정보 조회
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponseDto<Map<String, Object>>> getUserInfo(@PathVariable Long userId,
-                                                                           @RequestHeader("Authorization") String accessToken) {
-        if(accessToken == null || !accessToken.startsWith("Bearer ")) {
-            throw new CustomException("user_unauthorized", HttpStatus.UNAUTHORIZED);
-        }
+                                                                           @AuthenticationPrincipal UserDetails userDetails) {
+        String tokenEmail = userDetails.getUsername();
+        User selectUser = userService.getUserInfoById(userId);
 
-        String jwt = accessToken.substring(7);
-        Long tokenUserId = jwtService.validateAndExtractUserId(jwt);
-
-        if(!tokenUserId.equals(userId)) {
+        if(!tokenEmail.equals(selectUser.getEmail())) {
             throw new CustomException("user_forbidden", HttpStatus.FORBIDDEN);
         }
 
-        User selectUser = userService.getUserInfo(userId);
         return ResponseEntity.ok(new ApiResponseDto<>("user_info_success", selectUser));
     }
 }

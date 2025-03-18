@@ -1,4 +1,4 @@
-package com.prac.ktb.dto;
+package com.prac.ktb.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
