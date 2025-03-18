@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User getUserInfo(Long id) {
+    public User getUserInfoById(Long id) {
         User selectUser = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException("user_not_found", HttpStatus.NOT_FOUND));
 

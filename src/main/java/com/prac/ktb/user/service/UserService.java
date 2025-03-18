@@ -5,5 +5,5 @@ import com.prac.ktb.user.entity.User;
 
 public interface UserService {
     User createUser(UserRequestDto userRequestDto);
-    User getUserInfo(Long id);
+    User getUserInfoById(Long id);
 }

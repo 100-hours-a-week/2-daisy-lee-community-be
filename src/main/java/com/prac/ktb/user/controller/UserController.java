@@ -9,6 +9,8 @@ import com.prac.ktb.user.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -40,19 +42,14 @@ public class UserController {
     // 사용자 정보 조회
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponseDto<Map<String, Object>>> getUserInfo(@PathVariable Long userId,
-                                                                           @RequestHeader("Authorization") String accessToken) {
-        if(accessToken == null || !accessToken.startsWith("Bearer ")) {
-            throw new CustomException("user_unauthorized", HttpStatus.UNAUTHORIZED);
-        }
+                                                                           @AuthenticationPrincipal UserDetails userDetails) {
+        String tokenEmail = userDetails.getUsername();
+        User selectUser = userService.getUserInfoById(userId);
 
-        String jwt = accessToken.substring(7);
-        Long tokenUserId = jwtProvider.validateAndExtractUserId(jwt);
-
-        if(!tokenUserId.equals(userId)) {
+        if(!tokenEmail.equals(selectUser.getEmail())) {
             throw new CustomException("user_forbidden", HttpStatus.FORBIDDEN);
         }
 
-        User selectUser = userService.getUserInfo(userId);
         return ResponseEntity.ok(new ApiResponseDto<>("user_info_success", selectUser));
     }
 }
