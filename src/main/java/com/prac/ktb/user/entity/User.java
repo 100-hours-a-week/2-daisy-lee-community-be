@@ -2,7 +2,9 @@ package com.prac.ktb.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Where;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -10,6 +12,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @Table(name = "users")
+@Where(clause = "deleted_at IS NULL")
 public class User {
 
     @Id
@@ -29,6 +32,14 @@ public class User {
     private String profileImagePath;
 
     @Column
-    private Date droppedAt;
+    private LocalDateTime deletedAt;
+
+    public void delete(){
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public boolean isDeleted() {
+        return this.deletedAt != null;
+    }
 
 }

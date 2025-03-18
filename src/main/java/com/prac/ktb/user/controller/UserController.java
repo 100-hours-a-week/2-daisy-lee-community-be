@@ -20,11 +20,9 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-    private final JwtProvider jwtProvider;
 
     public UserController(UserService userService, JwtProvider jwtProvider) {
         this.userService = userService;
-        this.jwtProvider = jwtProvider;
     }
 
     /**
@@ -69,11 +67,11 @@ public class UserController {
      */
     @PatchMapping("/{userId}")
     public ResponseEntity<ApiResponseDto<Map<String, Object>>> updateUserInfo(@PathVariable Long userId,
-                                                                             @RequestBody UserRequestDto userReqDto,
-                                                                             @AuthenticationPrincipal UserDetails userDetails) {
-        userService.updateUser(userId, userDetails, userReqDto);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new ApiResponseDto<>("user_update_success", null));
+                                                                              @RequestBody UserRequestDto userReqDto,
+                                                                              @AuthenticationPrincipal UserDetails userDetails) {
+        UserResponseDto userResDto = userService.updateUser(userId, userDetails, userReqDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(new ApiResponseDto<>("user_update_success", userResDto));
 
     }
 
@@ -86,11 +84,26 @@ public class UserController {
      */
     @PatchMapping("/{userId}/password")
     public ResponseEntity<ApiResponseDto<Map<String, Object>>> updateUserPassword(@PathVariable Long userId,
-                                                                              @RequestBody UserRequestDto userReqDto,
-                                                                              @AuthenticationPrincipal UserDetails userDetails) {
-        userService.updateUser(userId, userDetails, userReqDto);
+                                                                                  @RequestBody UserRequestDto userReqDto,
+                                                                                  @AuthenticationPrincipal UserDetails userDetails) {
+        userService.updateUserPassword(userId, userDetails, userReqDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(new ApiResponseDto<>("user_update_password_success", null));
+
+    }
+
+    /**
+     * [회원 탈퇴]
+     * @param userId
+     * @param userDetails
+     * @return ResponseEntity
+     */
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<ApiResponseDto<Map<String, Object>>> deleteUser(@PathVariable Long userId,
+                                                                          @AuthenticationPrincipal UserDetails userDetails) {
+        userService.deleteUser(userId, userDetails);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ApiResponseDto<>("user_update_success", null));
+                .body(new ApiResponseDto<>("user_delete_success", null));
 
     }
 
