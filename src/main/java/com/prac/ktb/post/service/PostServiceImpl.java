@@ -1,5 +1,6 @@
 package com.prac.ktb.post.service;
 
+import com.prac.ktb.common.config.CommonProperties;
 import com.prac.ktb.common.exception.CustomException;
 import com.prac.ktb.post.dto.PostListResponseDto;
 import com.prac.ktb.post.dto.PostRequestDto;
@@ -16,7 +17,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ import java.util.List;
 public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final CommonProperties commonProperties;
     private PostResponseDto postResDto;
 
     @Override
@@ -111,5 +115,24 @@ public class PostServiceImpl implements PostService{
                                         .build();
 
         return postResDto;
+    }
+
+    @Override
+    public Map<String, Object> deletePost(Long postId, UserDetails userDetails) {
+        Post deletePost = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException("post_not_found", HttpStatus.NOT_FOUND));
+
+        if(deletePost.isDeleted()) {
+            throw new CustomException("post_already_deleted", HttpStatus.BAD_REQUEST);
+        }
+        deletePost.delete();
+        postRepository.save(deletePost);
+
+        // Todo. 댓글도 함께 삭제 필요
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("redirectURL", commonProperties.getPostDeleteURL());
+
+        return responseMap;
     }
 }

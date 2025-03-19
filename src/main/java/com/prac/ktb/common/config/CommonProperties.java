@@ -11,5 +11,5 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "app.redirect")
 public class CommonProperties {
     private String logoutURL;
-
+    private String postDeleteURL;
 }

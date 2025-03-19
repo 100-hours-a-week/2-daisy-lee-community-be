@@ -88,4 +88,19 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponseDto<>("post_get_success", postResDto));
     }
+
+    /**
+     * [게시물 삭제]
+     * @param postId
+     * @param userDetails
+     * @return ResponseEntity
+     */
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<ApiResponseDto<UserResponseDto>> deletePost(@PathVariable Long postId,
+                                                                      @AuthenticationPrincipal UserDetails userDetails) {
+        Map<String, Object> responseData = postService.deletePost(postId, userDetails);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponseDto<>("post_delete_success", responseData));
+
+    }
 }

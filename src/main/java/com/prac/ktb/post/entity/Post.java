@@ -64,4 +64,8 @@ public class Post {
     public boolean isDeleted() {
         return deletedAt != null;
     }
+
+    public void delete(){
+        this.deletedAt = LocalDateTime.now();
+    }
 }
