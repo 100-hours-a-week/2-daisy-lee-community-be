@@ -48,7 +48,7 @@ public class UserController {
      */
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponseDto<UserResponseDto>> getUserInfo(@PathVariable Long userId,
-                                                                           @AuthenticationPrincipal UserDetails userDetails) {
+                                                                       @AuthenticationPrincipal UserDetails userDetails) {
 
         UserResponseDto selectUserDto = userService.getUserInfoById(userId);
         userService.validateUserAccess(selectUserDto.getEmail(), userDetails);
@@ -101,9 +101,9 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<ApiResponseDto<UserResponseDto>> deleteUser(@PathVariable Long userId,
                                                                           @AuthenticationPrincipal UserDetails userDetails) {
-        userService.deleteUser(userId, userDetails);
+        Map<String, Object> responseData = userService.deleteUser(userId, userDetails);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ApiResponseDto<>("user_delete_success", null));
+                .body(new ApiResponseDto<>("user_delete_success", responseData));
 
     }
 }

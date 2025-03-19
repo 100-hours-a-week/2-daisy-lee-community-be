@@ -32,16 +32,22 @@ public class UserServiceImpl implements UserService{
             throw new CustomException("user_email_conflict", HttpStatus.CONFLICT);
         }
 
-        userResDto = UserResponseDto.builder()
-                .id(userRequestDto.getId())
-                .password(passwordEncoder.encode(userRequestDto.getPassword()))
+        User newUser = User.builder()
                 .email(userRequestDto.getEmail())
+                .password(passwordEncoder.encode(userRequestDto.getPassword()))
                 .nickname(userRequestDto.getNickname())
                 .profileImagePath(userRequestDto.getProfileImagePath())
                 .build();
 
-        userRepository.save(userResDto);
-        return userResDto;
+        userRepository.save(newUser);
+
+        return UserResponseDto.builder()
+                .id(userRequestDto.getId())
+                .email(userRequestDto.getEmail())
+                .password(passwordEncoder.encode(userRequestDto.getPassword()))
+                .nickname(userRequestDto.getNickname())
+                .profileImagePath(userRequestDto.getProfileImagePath())
+                .build();
     }
 
     @Override

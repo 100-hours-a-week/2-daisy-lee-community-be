@@ -1,6 +1,7 @@
 package com.prac.ktb.post.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.prac.ktb.user.entity.User;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,7 +11,8 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostResponseDto {
     private Long id;
-    private String authorId;
+    private String title;
+    private Long authorId;
     private String contents;
     private String postThumbnailPath;
     private int countRecommendation;
@@ -20,8 +22,9 @@ public class PostResponseDto {
     private LocalDateTime deletedAt;
 
     @Builder
-    public PostResponseDto(Long id, String authorId, String contents, String postThumbnailPath, int countRecommendation, int countView, LocalDateTime createdAt, LocalDateTime modifiedAt, LocalDateTime deletedAt) {
+    public PostResponseDto(Long id, String title, Long authorId, String contents, String postThumbnailPath, int countRecommendation, int countView, LocalDateTime createdAt, LocalDateTime modifiedAt, LocalDateTime deletedAt) {
         this.id = id;
+        this.title = title;
         this.authorId = authorId;
         this.contents = contents;
         this.postThumbnailPath = postThumbnailPath;

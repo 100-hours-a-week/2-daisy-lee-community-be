@@ -1,9 +1,9 @@
 package com.prac.ktb.post.dto;
 
+import com.prac.ktb.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.w3c.dom.Text;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PostRequestDto {
     private Long id;
-    private String authorId;
+    private String title;
+    private Long authorId;
     private String contents;
     private String postThumbnailPath;
     private int countRecommendation;

@@ -24,9 +24,9 @@ public class JwtProvider {
     }
 
     // JWT 생성
-    public String generateToken(String email) {
+    public String generateToken(Long id) {
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(String.valueOf(id))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
@@ -62,7 +62,7 @@ public class JwtProvider {
     }
 
     // JWT 유효성 검증 및 userId 추출
-    /*public Long validateAndExtractUserId(String token) {
+    public Long validateAndExtractUserId(String token) {
         try{
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(SECRET_KEY)
@@ -78,10 +78,10 @@ public class JwtProvider {
         } catch (IllegalArgumentException ex) {
             throw new RuntimeException("IllegalArgumentException");
         }
-    }*/
+    }
 
     // JWT 유효성 검증 및 email 추출
-    public String validateAndExtractEmail(String token) {
+    /*public String validateAndExtractEmail(String token) {
         try{
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(SECRET_KEY)
@@ -97,6 +97,6 @@ public class JwtProvider {
         } catch (IllegalArgumentException ex) {
             throw new RuntimeException("IllegalArgumentException");
         }
-    }
+    }*/
 
 }
