@@ -30,7 +30,7 @@ public class AuthService {
             throw new CustomException("user_login_fail", HttpStatus.UNAUTHORIZED);
         }
 
-        String jwt = jwtProvider.generateToken(loginUser.getEmail());
+        String jwt = jwtProvider.generateToken(loginUser.getId());
 
         return new LoginResponseDto(loginUser.getId(), jwt);
     }
