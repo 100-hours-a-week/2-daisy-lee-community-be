@@ -34,6 +34,16 @@ public class User {
     @Column
     private LocalDateTime deletedAt;
 
+    @Builder
+    public User(Long id, String email, String password, String nickname, String profileImagePath, LocalDateTime deletedAt) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.profileImagePath = profileImagePath;
+        this.deletedAt = deletedAt;
+    }
+
     public void delete(){
         this.deletedAt = LocalDateTime.now();
     }

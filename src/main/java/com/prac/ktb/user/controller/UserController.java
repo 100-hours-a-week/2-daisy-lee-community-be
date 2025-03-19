@@ -48,7 +48,7 @@ public class UserController {
      */
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponseDto<UserResponseDto>> getUserInfo(@PathVariable Long userId,
-                                                                           @AuthenticationPrincipal UserDetails userDetails) {
+                                                                       @AuthenticationPrincipal UserDetails userDetails) {
 
         UserResponseDto selectUserDto = userService.getUserInfoById(userId);
         userService.validateUserAccess(selectUserDto.getEmail(), userDetails);
