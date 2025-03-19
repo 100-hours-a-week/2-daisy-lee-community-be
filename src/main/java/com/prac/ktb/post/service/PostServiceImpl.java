@@ -6,6 +6,7 @@ import com.prac.ktb.post.dto.PostRequestDto;
 import com.prac.ktb.post.dto.PostResponseDto;
 import com.prac.ktb.post.entity.Post;
 import com.prac.ktb.post.repository.PostRepository;
+import com.prac.ktb.user.dto.UserResponseDto;
 import com.prac.ktb.user.entity.User;
 import com.prac.ktb.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -44,12 +45,6 @@ public class PostServiceImpl implements PostService{
 
         return PostResponseDto.builder()
                 .id(newPost.getId())
-//                .title(newPost.getTitle())
-//                .author(newPost.getAuthor())
-//                .contents(newPost.getContents())
-//                .postThumbnailPath(newPost.getPostThumbnailPath())
-//                .createdAt(newPost.getCreatedAt())
-//                .modifiedAt(newPost.getModifiedAt())
                 .build();
     }
 
@@ -61,6 +56,7 @@ public class PostServiceImpl implements PostService{
                 .map(post -> PostResponseDto.builder()
                                     .id(post.getId())
                                     .authorId(post.getAuthor().getId())
+                                    .title(post.getTitle())
                                     .contents(post.getContents())
                                     .postThumbnailPath(post.getPostThumbnailPath())
                                     .countRecommendation(post.getCountRecommendation())
@@ -77,7 +73,43 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostResponseDto updatePost(PostRequestDto postReqDto) {
-        return null;
+    public void updatePost(Long postId, UserDetails userDetails, PostRequestDto postReqDto) {
+        Post updatePost = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException("post_not_found", HttpStatus.NOT_FOUND));
+
+        User user = userRepository.findById(Long.parseLong(userDetails.getUsername()))
+                .orElseThrow(() -> new CustomException("user_not_found", HttpStatus.NOT_FOUND));
+
+        // 본인 작성인지 확인
+        if(!updatePost.getAuthor().getId().equals(user.getId())) {
+            throw new CustomException("post_unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+
+        updatePost.setTitle(postReqDto.getTitle());
+        updatePost.setContents(postReqDto.getContents());
+        updatePost.setPostThumbnailPath(postReqDto.getPostThumbnailPath());
+        updatePost.setModifiedAt(LocalDateTime.now());
+
+    }
+
+    @Override
+    public PostResponseDto getPostById(Long postId, UserDetails userDetails) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException("post_not_found", HttpStatus.NOT_FOUND));
+
+        PostResponseDto postResDto = PostResponseDto.builder()
+                                        .id(post.getId())
+                                        .title(post.getTitle())
+                                        .contents(post.getContents())
+                                        .authorId(post.getAuthor().getId())
+                                        .postThumbnailPath(post.getPostThumbnailPath())
+                                        .countRecommendation(post.getCountRecommendation())
+                                        .countView(post.getCountView())
+                                        .createdAt(post.getCreatedAt())
+                                        .modifiedAt(post.getModifiedAt())
+                                        .deletedAt(post.getDeletedAt())
+                                        .build();
+
+        return postResDto;
     }
 }

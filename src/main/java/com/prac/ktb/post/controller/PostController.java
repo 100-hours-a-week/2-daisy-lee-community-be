@@ -59,13 +59,33 @@ public class PostController {
 
     /**
      * [게시물 수정]
+     * @param postId
+     * @param postReqDto
+     * @param userDetails
      * @return ResponseEntity
      */
-    @PatchMapping("/{postId}")
-    public ResponseEntity<ApiResponseDto<PostResponseDto>> updatePost(@RequestBody PostRequestDto postReqDto,
+    @PutMapping("/{postId}")
+    public ResponseEntity<ApiResponseDto<PostResponseDto>> updatePost(@PathVariable Long postId,
+                                                                      @RequestBody PostRequestDto postReqDto,
                                                                       @AuthenticationPrincipal UserDetails userDetails) {
 
-        PostResponseDto postResDto = postService.updatePost(postReqDto);
-        return null;
+        postService.updatePost(postId, userDetails, postReqDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(new ApiResponseDto<>("posts_all_get_success", null));
+    }
+
+    /**
+     * [게시물 단일 조회]
+     * @param postId
+     * @param userDetails
+     * @return ResponseEntity
+     */
+    @GetMapping("/{postId}")
+    public ResponseEntity<ApiResponseDto<PostResponseDto>> getPost(@PathVariable Long postId,
+                                                                   @AuthenticationPrincipal UserDetails userDetails) {
+
+        PostResponseDto postResDto = postService.getPostById(postId, userDetails);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponseDto<>("post_get_success", postResDto));
     }
 }

@@ -6,10 +6,9 @@ import com.prac.ktb.post.dto.PostRequestDto;
 import com.prac.ktb.post.dto.PostResponseDto;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.List;
-
 public interface PostService {
     PostResponseDto createPost(PostRequestDto postReqDto, UserDetails userDetails);
     PostListResponseDto getAllPosts();
-    PostResponseDto updatePost(PostRequestDto postReqDto);
+    void updatePost(Long postId, UserDetails userDetails, PostRequestDto postReqDto);
+    PostResponseDto getPostById(Long postId, UserDetails userDetails);
 }
