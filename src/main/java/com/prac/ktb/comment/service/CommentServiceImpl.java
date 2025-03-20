@@ -94,7 +94,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void updateComment(Long postId,Long commentId, UserDetails userDetails, CommentRequestDto commentReqDto) {
+    public void updateComment(Long postId, Long commentId, UserDetails userDetails, CommentRequestDto commentReqDto) {
         User user = userRepository.findById(Long.parseLong(userDetails.getUsername()))
                 .orElseThrow(() -> new CustomException("user_not_found", HttpStatus.NOT_FOUND));
 
@@ -109,6 +109,23 @@ public class CommentServiceImpl implements CommentService {
         updateComment.setComment(commentReqDto.getComments());
         updateComment.setModifiedAt(LocalDateTime.now());
 
+    }
+
+    @Override
+    public void deleteComment(Long commentId, UserDetails userDetails) {
+        User user = userRepository.findById(Long.parseLong(userDetails.getUsername()))
+                .orElseThrow(() -> new CustomException("user_not_found", HttpStatus.NOT_FOUND));
+
+        Comment deleteComment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException("comment_not_found", HttpStatus.NOT_FOUND));
+
+        // 본인 작성인지 확인
+        if(!deleteComment.getUser().getId().equals(user.getId())) {
+            throw new CustomException("comment_update_unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+
+        deleteComment.delete(); // soft delete
+        commentRepository.save(deleteComment);
     }
 
 

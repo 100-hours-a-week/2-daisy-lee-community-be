@@ -122,9 +122,14 @@ public class PostServiceImpl implements PostService{
         Post deletePost = postRepository.findByIdAndDeletedAtIsNull(postId)
                 .orElseThrow(() -> new CustomException("post_not_found", HttpStatus.NOT_FOUND));
 
-//        if(deletePost.isDeleted()) {
-//            throw new CustomException("post_already_deleted", HttpStatus.BAD_REQUEST);
-//        }
+        User user = userRepository.findById(Long.parseLong(userDetails.getUsername()))
+                .orElseThrow(() -> new CustomException("user_not_found", HttpStatus.NOT_FOUND));
+
+        // 본인 작성인지 확인
+        if(!deletePost.getAuthor().getId().equals(user.getId())) {
+            throw new CustomException("comment_update_unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+
         deletePost.delete();
         postRepository.save(deletePost);
 

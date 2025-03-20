@@ -88,5 +88,21 @@ public class CommentController {
                 .body(new ApiResponseDto<>("", null));
     }
 
+    /**
+     * [댓글 삭제]
+     * @param postId
+     * @param commentId
+     * @param userDetails
+     * @return ResponseEntity
+     */
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<ApiResponseDto<PostResponseDto>> deletePost(@PathVariable Long postId,
+                                                                      @PathVariable Long commentId,
+                                                                      @AuthenticationPrincipal UserDetails userDetails) {
+        commentService.deleteComment(commentId, userDetails);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(new ApiResponseDto<>("", null));
+    }
+
 
 }
