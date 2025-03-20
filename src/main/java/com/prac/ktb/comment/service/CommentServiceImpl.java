@@ -6,6 +6,7 @@ import com.prac.ktb.comment.dto.CommentResponseDto;
 import com.prac.ktb.comment.entity.Comment;
 import com.prac.ktb.comment.repository.CommentRepository;
 import com.prac.ktb.common.exception.CustomException;
+import com.prac.ktb.post.dto.PostRequestDto;
 import com.prac.ktb.post.entity.Post;
 import com.prac.ktb.post.repository.PostRepository;
 import com.prac.ktb.user.entity.User;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -59,9 +61,6 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentListResponseDto getAllComments(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException("post_not_found", HttpStatus.NOT_FOUND));
-
         List<Comment> comments = commentRepository.findByPostIdAndDeletedAtIsNullOrderByCreatedAtDesc(postId);
 
         List<CommentResponseDto> commentDtos = comments.stream()
@@ -79,4 +78,38 @@ public class CommentServiceImpl implements CommentService {
                 .comments(commentDtos)
                 .build();
     }
+
+    @Override
+    public CommentResponseDto getComment(Long postId, Long commentId) {
+        Comment comment = commentRepository.findByIdAndDeletedAtIsNull(commentId)
+                .orElseThrow(() -> new CustomException("comment_not_found", HttpStatus.NOT_FOUND));
+
+        return CommentResponseDto.builder()
+                .id(comment.getId())
+                .comment(comment.getComment())
+                .commentAuthorId(comment.getUser().getId())
+                .createdAt(comment.getCreatedAt())
+                .modifiedAt(comment.getModifiedAt())
+                .build();
+    }
+
+    @Override
+    public void updateComment(Long postId,Long commentId, UserDetails userDetails, CommentRequestDto commentReqDto) {
+        User user = userRepository.findById(Long.parseLong(userDetails.getUsername()))
+                .orElseThrow(() -> new CustomException("user_not_found", HttpStatus.NOT_FOUND));
+
+        Comment updateComment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException("comment_not_found", HttpStatus.NOT_FOUND));
+
+        // 본인 작성인지 확인
+        if(!updateComment.getUser().getId().equals(user.getId())) {
+            throw new CustomException("comment_update_unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+
+        updateComment.setComment(commentReqDto.getComments());
+        updateComment.setModifiedAt(LocalDateTime.now());
+
+    }
+
+
 }

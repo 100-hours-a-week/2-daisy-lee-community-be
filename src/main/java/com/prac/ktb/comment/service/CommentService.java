@@ -10,4 +10,6 @@ import java.util.List;
 public interface CommentService {
     CommentResponseDto createComment(Long postId, CommentRequestDto commentReqDto, UserDetails userDetails);
     CommentListResponseDto getAllComments(Long postId);
+    CommentResponseDto getComment(Long postId, Long commentId);
+    void updateComment(Long postId, Long commentId, UserDetails userDetails, CommentRequestDto commentReqDto);
 }

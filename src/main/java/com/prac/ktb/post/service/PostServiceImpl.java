@@ -119,12 +119,12 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Map<String, Object> deletePost(Long postId, UserDetails userDetails) {
-        Post deletePost = postRepository.findById(postId)
+        Post deletePost = postRepository.findByIdAndDeletedAtIsNull(postId)
                 .orElseThrow(() -> new CustomException("post_not_found", HttpStatus.NOT_FOUND));
 
-        if(deletePost.isDeleted()) {
-            throw new CustomException("post_already_deleted", HttpStatus.BAD_REQUEST);
-        }
+//        if(deletePost.isDeleted()) {
+//            throw new CustomException("post_already_deleted", HttpStatus.BAD_REQUEST);
+//        }
         deletePost.delete();
         postRepository.save(deletePost);
 

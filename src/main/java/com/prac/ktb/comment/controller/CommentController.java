@@ -33,7 +33,7 @@ public class CommentController {
      * @param commentReqDto
      * @return ResponseEntity
      */
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<ApiResponseDto<CommentResponseDto>> createComment(@PathVariable Long postId,
                                                                             @RequestBody CommentRequestDto commentReqDto,
                                                                             @AuthenticationPrincipal UserDetails userDetails) {
@@ -52,9 +52,40 @@ public class CommentController {
      */
     @GetMapping
     public ResponseEntity<ApiResponseDto<List<CommentResponseDto>>> getAllComments(@PathVariable Long postId) {
-        CommentListResponseDto comments = commentService.getAllComments(postId);
+        CommentListResponseDto commentListResDto = commentService.getAllComments(postId);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ApiResponseDto<>("comment_list_success", comments));
+                .body(new ApiResponseDto<>("comment_list_success", commentListResDto));
+    }
+
+    /**
+     * [댓글 단일 조회]
+     * @return ResponseEntity
+     */
+    @GetMapping("/{commentId}")
+    public ResponseEntity<ApiResponseDto<CommentResponseDto>> getComment(@PathVariable Long postId,
+                                                                         @PathVariable Long commentId) {
+        CommentResponseDto commentResDto = commentService.getComment(postId, commentId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponseDto<>("comment_get_success", commentResDto));
+    }
+
+    /**
+     * [댓글 수정]
+     * @param postId
+     * @param commentId
+     * @param commentReqDto
+     * @param userDetails
+     * @return ResponseEntity
+     */
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<ApiResponseDto<PostResponseDto>> updatePost(@PathVariable Long postId,
+                                                                      @PathVariable Long commentId,
+                                                                      @RequestBody CommentRequestDto commentReqDto,
+                                                                      @AuthenticationPrincipal UserDetails userDetails) {
+
+        commentService.updateComment(postId, commentId, userDetails, commentReqDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(new ApiResponseDto<>("", null));
     }
 
 
