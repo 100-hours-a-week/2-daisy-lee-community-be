@@ -50,7 +50,7 @@ public class PostController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity<ApiResponseDto<PostResponseDto>> getAllPosts() {
+    public ResponseEntity<ApiResponseDto<PostListResponseDto>> getAllPosts() {
 
         PostListResponseDto allPosts = postService.getAllPosts();
         return ResponseEntity.status(HttpStatus.OK)

@@ -48,8 +48,7 @@ public class Post {
     private LocalDateTime deletedAt; // 삭제된 경우 삭제 시간 저장
 
     @Builder
-    public Post(Long id, String title, User author, String contents, String postThumbnailPath, int countRecommendation, int countView, LocalDateTime createdAt, LocalDateTime modifiedAt, LocalDateTime deletedAt) {
-        this.id = id;
+    public Post(String title, User author, String contents, String postThumbnailPath, int countRecommendation, int countView, LocalDateTime createdAt, LocalDateTime modifiedAt, LocalDateTime deletedAt) {
         this.title = title;
         this.author = author;
         this.contents = contents;
