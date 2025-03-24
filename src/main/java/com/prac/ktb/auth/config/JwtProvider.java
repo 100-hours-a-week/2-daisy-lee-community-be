@@ -80,23 +80,4 @@ public class JwtProvider {
         }
     }
 
-    // JWT 유효성 검증 및 email 추출
-    /*public String validateAndExtractEmail(String token) {
-        try{
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(SECRET_KEY)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            return claims.getSubject();
-        } catch (ExpiredJwtException e) {
-            throw new RuntimeException("expired_token");
-        } catch (JwtException e) {
-            throw new RuntimeException("changed_token");
-        } catch (IllegalArgumentException ex) {
-            throw new RuntimeException("IllegalArgumentException");
-        }
-    }*/
-
 }

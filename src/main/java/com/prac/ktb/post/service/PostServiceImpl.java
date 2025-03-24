@@ -1,5 +1,7 @@
 package com.prac.ktb.post.service;
 
+import com.prac.ktb.comment.dto.CommentResponseDto;
+import com.prac.ktb.comment.repository.CommentRepository;
 import com.prac.ktb.common.config.CommonProperties;
 import com.prac.ktb.common.exception.CustomException;
 import com.prac.ktb.post.dto.PostListResponseDto;
@@ -27,6 +29,7 @@ import java.util.Map;
 public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     private final CommonProperties commonProperties;
     private PostResponseDto postResDto;
 
@@ -54,21 +57,31 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public PostListResponseDto getAllPosts() {
-        List<Post> posts = postRepository.findByDeletedAtIsNull();
+        List<Post> posts = postRepository.findByDeletedAtIsNullOrderByCreatedAtDesc();
 
         List<PostResponseDto> postDtos = posts.stream()
-                .map(post -> PostResponseDto.builder()
-                                    .id(post.getId())
-                                    .authorId(post.getAuthor().getId())
-                                    .title(post.getTitle())
-                                    .contents(post.getContents())
-                                    .postThumbnailPath(post.getPostThumbnailPath())
-                                    .countRecommendation(post.getCountRecommendation())
-                                    .countView(post.getCountView())
-                                    .createdAt(post.getCreatedAt())
-                                    .modifiedAt(post.getModifiedAt())
-                                    .deletedAt(post.getDeletedAt())
+                .map(post -> {
+                    int countComment = commentRepository.countByPostAndDeletedAtIsNull(post);
+                    User author = post.getAuthor();
+                    return PostResponseDto.builder()
+                            .id(post.getId())
+                            .authorId(post.getAuthor().getId())
+                            .author(PostResponseDto.AuthorDto.builder()
+                                    .id(author.getId())
+                                    .nickname(author.getNickname())
+                                    .profileImagePath(author.getProfileImagePath())
                                     .build())
+                            .title(post.getTitle())
+                            .contents(post.getContents())
+                            .postThumbnailPath(post.getPostThumbnailPath())
+                            .countRecommendation(post.getCountRecommendation())
+                            .countView(post.getCountView())
+                            .countComment(countComment)
+                            .createdAt(post.getCreatedAt())
+                            .modifiedAt(post.getModifiedAt())
+                            .deletedAt(post.getDeletedAt())
+                            .build();
+                })
                 .toList();
 
         return PostListResponseDto.builder()
@@ -101,14 +114,26 @@ public class PostServiceImpl implements PostService{
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException("post_not_found", HttpStatus.NOT_FOUND));
 
+        User author = userRepository.findById(post.getAuthor().getId())
+                .orElseThrow(() -> new CustomException("user_not_found", HttpStatus.NOT_FOUND));
+
+        int countComment = commentRepository.countByPostAndDeletedAtIsNull(post);
+
+        PostResponseDto.AuthorDto authorDto = PostResponseDto.AuthorDto.builder()
+                .id(author.getId())
+                .nickname(author.getNickname())
+                .profileImagePath(author.getProfileImagePath()) // 필요하면 Null 체크
+                .build();
+
         PostResponseDto postResDto = PostResponseDto.builder()
                                         .id(post.getId())
                                         .title(post.getTitle())
                                         .contents(post.getContents())
-                                        .authorId(post.getAuthor().getId())
+                                        .author(authorDto)
                                         .postThumbnailPath(post.getPostThumbnailPath())
                                         .countRecommendation(post.getCountRecommendation())
                                         .countView(post.getCountView())
+                                        .countComment(countComment)
                                         .createdAt(post.getCreatedAt())
                                         .modifiedAt(post.getModifiedAt())
                                         .deletedAt(post.getDeletedAt())

@@ -34,7 +34,7 @@ public class UserController {
     public ResponseEntity<ApiResponseDto<UserResponseDto>> createUser(@RequestBody UserRequestDto userReqDto) {
         UserResponseDto newUserResDto = userService.createUser(userReqDto);
 
-        Map<String, Object> responseData = Map.of("userId", newUserResDto.getId());
+        Map<String, Object> responseData = Map.of("userEmail", newUserResDto.getEmail());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponseDto<>("user_register_success", responseData));
 

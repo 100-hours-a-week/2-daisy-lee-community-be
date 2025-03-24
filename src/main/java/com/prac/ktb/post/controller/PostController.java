@@ -40,7 +40,7 @@ public class PostController {
         PostResponseDto newPostResDto = postService.createPost(postReqDto, userDetails);
 
         Map<String, Object> responseData = Map.of("postId", newPostResDto.getId());
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponseDto<>("post_create_success", responseData));
 
     }
@@ -70,7 +70,7 @@ public class PostController {
                                                                       @AuthenticationPrincipal UserDetails userDetails) {
 
         postService.updatePost(postId, userDetails, postReqDto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponseDto<>("posts_all_get_success", null));
     }
 

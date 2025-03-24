@@ -10,10 +10,10 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRequestDto {
-    private Long id;
+    //private Long id;
     private String password;
     private String email;
     private String nickname;
-    private String profileImagePath;
-    private Date deletedAt;
+    //private String profileImagePath;
+    //private Date deletedAt;
 }

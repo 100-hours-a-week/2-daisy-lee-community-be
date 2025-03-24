@@ -31,7 +31,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if(jwt != null && jwtProvider.validateToken(jwt)) {
             Long id = jwtProvider.validateAndExtractUserId(jwt);
-            //String email = jwtProvider.validateAndExtractEmail(jwt);
 
             UserDetails userDetails = new User(String.valueOf(id), "", Collections.emptyList()); // JWT으로 인증처리를 하기 때문에 password 부분은 공란
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, jwt, userDetails.getAuthorities());

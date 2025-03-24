@@ -13,7 +13,8 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     Post save(PostResponseDto postResDto);
-    List<Post> findByDeletedAtIsNull(); // 게시물
+    Optional<Post> findByIdAndDeletedAtIsNull(Long postId);
+    List<Post> findByDeletedAtIsNullOrderByCreatedAtDesc(); // 게시물
     // postid 로 user 찾게끔
     @Query("SELECT p FROM Post p JOIN FETCH p.author WHERE p.id = :postId")
     Optional<Post> findByIdWithAuthor(@Param("postId") Long postId);

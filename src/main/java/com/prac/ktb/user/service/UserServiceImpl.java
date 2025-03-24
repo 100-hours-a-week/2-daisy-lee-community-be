@@ -36,17 +36,16 @@ public class UserServiceImpl implements UserService{
                 .email(userRequestDto.getEmail())
                 .password(passwordEncoder.encode(userRequestDto.getPassword()))
                 .nickname(userRequestDto.getNickname())
-                .profileImagePath(userRequestDto.getProfileImagePath())
+              //  .profileImagePath(userRequestDto.getProfileImagePath())
                 .build();
 
         userRepository.save(newUser);
 
         return UserResponseDto.builder()
-                .id(userRequestDto.getId())
                 .email(userRequestDto.getEmail())
                 .password(passwordEncoder.encode(userRequestDto.getPassword()))
                 .nickname(userRequestDto.getNickname())
-                .profileImagePath(userRequestDto.getProfileImagePath())
+              //  .profileImagePath(userRequestDto.getProfileImagePath())
                 .build();
     }
 
@@ -74,8 +73,8 @@ public class UserServiceImpl implements UserService{
         if(userReqDto.getNickname() != null && !userReqDto.getNickname().isEmpty())
             updateUser.setNickname(userReqDto.getNickname());
 
-        if(userReqDto.getProfileImagePath() != null && !userReqDto.getProfileImagePath().isEmpty())
-            updateUser.setProfileImagePath(userReqDto.getProfileImagePath());
+      //  if(userReqDto.getProfileImagePath() != null && !userReqDto.getProfileImagePath().isEmpty())
+       //     updateUser.setProfileImagePath(userReqDto.getProfileImagePath());
 
         // @Transactional 사용할 경우 save() 불필요, 변경 감지
         userResDto = UserResponseDto.builder()
