@@ -1,6 +1,5 @@
 package com.prac.ktb.post.dto;
 
-import com.prac.ktb.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
