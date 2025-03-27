@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
         Comment newComment = Comment.builder()
                         .post(post)
                         .user(user)
-                        .comment(commentReqDto.getComments())
+                        .comment(commentReqDto.getComment())
                         .createdAt(LocalDateTime.now())
                         .modifiedAt(LocalDateTime.now())
                         .deletedAt(null)
@@ -114,7 +114,7 @@ public class CommentServiceImpl implements CommentService {
             throw new CustomException("comment_update_unauthorized", HttpStatus.UNAUTHORIZED);
         }
 
-        updateComment.setComment(commentReqDto.getComments());
+        updateComment.setComment(commentReqDto.getComment());
         updateComment.setModifiedAt(LocalDateTime.now());
 
     }

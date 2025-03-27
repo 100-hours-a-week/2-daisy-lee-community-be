@@ -6,9 +6,11 @@ import com.prac.ktb.post.dto.PostRequestDto;
 import com.prac.ktb.post.dto.PostResponseDto;
 import com.prac.ktb.post.entity.Post;
 import com.prac.ktb.post.service.PostService;
+import com.prac.ktb.postRecommendation.service.PostRecommendationService;
 import com.prac.ktb.user.dto.UserRequestDto;
 import com.prac.ktb.user.dto.UserResponseDto;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,21 +23,20 @@ import java.util.Map;
 @RestController
 @RequestMapping("/posts")
 @Transactional
+@RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
-
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
+    private final PostRecommendationService postRecommendationService;
 
     /**
      * [게시물 등록]
+     *
      * @param postReqDto
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity<ApiResponseDto<PostResponseDto>> createUser(@RequestBody PostRequestDto postReqDto,
+    public ResponseEntity<ApiResponseDto<PostResponseDto>> createUser(@ModelAttribute PostRequestDto postReqDto,
                                                                       @AuthenticationPrincipal UserDetails userDetails) {
         PostResponseDto newPostResDto = postService.createPost(postReqDto, userDetails);
 
@@ -47,6 +48,7 @@ public class PostController {
 
     /**
      * [게시물 목록 조회]
+     *
      * @return ResponseEntity
      */
     @GetMapping
@@ -59,14 +61,15 @@ public class PostController {
 
     /**
      * [게시물 수정]
+     *
      * @param postId
      * @param postReqDto
      * @param userDetails
      * @return ResponseEntity
      */
-    @PutMapping("/{postId}")
+    @PatchMapping("/{postId}")
     public ResponseEntity<ApiResponseDto<PostResponseDto>> updatePost(@PathVariable Long postId,
-                                                                      @RequestBody PostRequestDto postReqDto,
+                                                                      @ModelAttribute PostRequestDto postReqDto,
                                                                       @AuthenticationPrincipal UserDetails userDetails) {
 
         postService.updatePost(postId, userDetails, postReqDto);
@@ -76,6 +79,7 @@ public class PostController {
 
     /**
      * [게시물 단일 조회]
+     *
      * @param postId
      * @param userDetails
      * @return ResponseEntity
@@ -91,6 +95,7 @@ public class PostController {
 
     /**
      * [게시물 삭제]
+     *
      * @param postId
      * @param userDetails
      * @return ResponseEntity
@@ -102,5 +107,22 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponseDto<>("post_delete_success", responseData));
 
+    }
+
+    /**
+     * [게시물 추천]
+     *
+     * @param postId
+     * @param userDetails
+     * @return ResponseEntity
+     */
+    @PostMapping("/{postId}/recommendation")
+    public ResponseEntity<ApiResponseDto<Map<String, Object>>> recommendationPost(@PathVariable Long postId,
+                                                                                  @AuthenticationPrincipal UserDetails userDetails) {
+        int recommendationCount = postRecommendationService.recommendationPost(postId, userDetails);
+
+        Map<String, Object> data = Map.of("recommendationCount", recommendationCount);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponseDto<>("recommendation_success", data));
     }
 }

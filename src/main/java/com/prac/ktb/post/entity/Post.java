@@ -32,11 +32,11 @@ public class Post {
     @Column
     private String postThumbnailPath;
 
-    @Column
-    private int countRecommendation;
+    @Column(nullable = false)
+    private int countRecommendation = 0;
 
-    @Column
-    private int countView;
+    @Column(nullable = false)
+    private int countView = 0;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -65,7 +65,7 @@ public class Post {
         return deletedAt != null;
     }
 
-    public void delete(){
+    public void delete() {
         this.deletedAt = LocalDateTime.now();
     }
 }
