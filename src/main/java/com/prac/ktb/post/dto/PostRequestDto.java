@@ -4,6 +4,7 @@ import com.prac.ktb.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +16,7 @@ public class PostRequestDto {
     private String title;
     private Long authorId;
     private String contents;
-    private String postThumbnailPath;
+    private MultipartFile postThumbnailPath;
     private int countRecommendation;
     private int countView;
     private LocalDateTime createdAt;

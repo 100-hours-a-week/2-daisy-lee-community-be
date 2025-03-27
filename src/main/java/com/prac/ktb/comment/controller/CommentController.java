@@ -84,7 +84,7 @@ public class CommentController {
                                                                       @AuthenticationPrincipal UserDetails userDetails) {
 
         commentService.updateComment(postId, commentId, userDetails, commentReqDto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponseDto<>("", null));
     }
 
@@ -100,7 +100,7 @@ public class CommentController {
                                                                       @PathVariable Long commentId,
                                                                       @AuthenticationPrincipal UserDetails userDetails) {
         commentService.deleteComment(commentId, userDetails);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponseDto<>("", null));
     }
 

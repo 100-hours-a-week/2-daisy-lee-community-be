@@ -13,5 +13,7 @@ public interface UserService {
     Map<String, Object> deleteUser(Long userId, UserDetails userDetails);
     void updateUserPassword(Long userId, UserDetails userDetails, UserRequestDto userRequestDto);
     void validateUserAccess(String email, UserDetails userDetails);
+    boolean isEmailDuplicated(String email);
+    boolean isNicknameDuplicated(String nickname);
 
 }
